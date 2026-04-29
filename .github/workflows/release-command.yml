@@ -170,12 +170,12 @@ jobs:
       - name: Create and push tag
         run: |
           tag='${{ steps.version.outputs.tag }}'
-          if git rev-parse "$tag" >/dev/null 2>&1; then
-            echo "Tag $tag already exists"
-            exit 1
+          if git ls-remote --tags origin "refs/tags/$tag" | grep -q "$tag"; then
+            echo "Tag $tag already exists on remote, skipping creation."
+          else
+            git tag "$tag"
+            git push origin "$tag"
           fi
-          git tag "$tag"
-          git push origin "$tag"
 
       - name: Trigger release workflow for new tag
         uses: actions/github-script@v7
