@@ -24,17 +24,6 @@ jobs:
   build-release:
     runs-on: ubuntu-latest
     steps:
-      - name: Validate tag exists
-        run: |
-          tag="${{ env.RELEASE_TAG }}"
-          if ! gh api "repos/${{ github.repository }}/git/refs/tags/${tag}" --silent 2>/dev/null; then
-            echo "Error: tag '$tag' does not exist on the remote." >&2
-            echo "This workflow rebuilds an existing tag. To create a new release, use the 'Release' workflow instead." >&2
-            exit 1
-          fi
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Checkout
         uses: actions/checkout@v4
         with:
